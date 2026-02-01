@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Format-Prompt Output: Plan Checklist (docs-driven-developer)
+  Ngày: 2026-02-01
+  Input: Sử dụng docs-driven-developer để xây dựng file plan checklist
+  Output: Prompt đã nâng cấp + Tóm tắt thay đổi
+-->
+
+<prompt-improver-output>
+  <analysis>
+    <phase1-summary>
+      <goal>Xây dựng file plan checklist tại Docs/check.list.md giúp theo dõi: (1) giai đoạn hiện tại, (2) việc đang làm, (3) việc cần làm tiếp theo</goal>
+      <context>Project: Website Mạng Xã Hội Chia Sẻ Kiến Thức. Có agent docs-driven-developer (.cursor/agents/docs-driven-developer.md). Có 4 giai đoạn lifecycle trong Docs/life-1/lifecycle-checklist-and-folder-structure.md. File check.list.md hiện trống.</context>
+      <issues>
+        <issue type="Ambiguity" severity="Minor">Typo "biến" → "biết"</issue>
+        <issue type="Missing Context" severity="Major">Chưa nêu rõ nguồn tham chiếu (lifecycle checklist, folder structure) và cách xác định giai đoạn</issue>
+        <issue type="No Structure" severity="Major">Thiếu cấu trúc output mong đợi cho check.list.md</issue>
+        <issue type="Implicit Assumptions" severity="Minor">Giả định AI biết docs-driven-developer là agent trong project</issue>
+      </issues>
+    </phase1-summary>
+
+    <phase2-root-cause>
+      Prompt gốc ngắn, thiếu context về lifecycle và output format; chưa rõ cách map checklist với 4 giai đoạn (life-1..4).
+    </phase2-root-cause>
+
+    <phase3-techniques>
+      <technique name="Specificity">Chỉ rõ file tham chiếu: lifecycle-checklist-and-folder-structure.md, docs-driven-developer agent</technique>
+      <technique name="Structure">Chia sections: Role, Context, Task, Instructions, Output Format</technique>
+      <technique name="Examples">Thêm ví dụ cấu trúc check.list.md mong đợi</technique>
+      <technique name="Constraints">Ràng buộc: grounded in Docs/, tiếng Việt</technique>
+    </phase3-techniques>
+  </analysis>
+
+  <improved-prompt format="markdown">
+    <![CDATA[
+## Role
+
+Bạn là **docs-driven development specialist** cho project "Website Mạng Xã Hội Chia Sẻ Kiến Thức". Mọi đề xuất phải bám sát tài liệu trong `Docs/`.
+
+## Context
+
+### Environment
+- **Project:** Website Mạng Xã Hội Chia Sẻ Kiến Thức (Next.js + Payload + MongoDB)
+- **Agent:** `.cursor/agents/docs-driven-developer.md` — đọc Docs/ trước khi trả lời
+- **File target:** `Docs/check.list.md` (hiện trống)
+
+### Nguồn tham chiếu bắt buộc
+- `Docs/life-1/lifecycle-checklist-and-folder-structure.md` — 4 giai đoạn, checklist công việc, deliverables, cấu trúc thư mục
+- `Docs/life-1/01-vision/product-vision.md` — vision, MVP scope
+- Cấu trúc thư mục `Docs/life-1/`, `Docs/life-2/`, `Docs/life-3/`, `Docs/life-4/`
+
+### 4 Giai đoạn lifecycle
+| Giai đoạn | Tên | Thư mục Docs |
+|-----------|-----|---------------|
+| 1 | Định hướng | `Docs/life-1/` |
+| 2 | Phân tích & Thiết kế | `Docs/life-2/` |
+| 3 | Triển khai | `Docs/life-3/` |
+| 4 | Verify | `Docs/life-4/` |
+
+## Task
+
+Xây dựng file **plan checklist** tại `Docs/check.list.md` giúp người dùng:
+1. **Biết mình đang trong giai đoạn nào** (Life-1 / Life-2 / Life-3 / Life-4)
+2. **Biết mình đang làm gì** (công việc hiện tại, tiến độ)
+3. **Biết mình cần làm gì** (công việc tiếp theo, hàng đợi)
+
+## Instructions
+
+1. **Đọc** `Docs/life-1/lifecycle-checklist-and-folder-structure.md` để lấy checklist chi tiết từng giai đoạn
+2. **Đọc** cấu trúc thư mục `Docs/life-1/`, `Docs/life-2/`, `Docs/life-3/`, `Docs/life-4/` để xác định deliverables đã có
+3. **Tạo** `Docs/check.list.md` với cấu trúc gồm:
+   - Phần "Giai đoạn hiện tại" — cho phép tick/ghi chú
+   - Phần "Đang làm" — công việc đang thực hiện
+   - Phần "Cần làm tiếp" — công việc tiếp theo (priority)
+   - Phần "Checklist theo giai đoạn" — map với lifecycle checklist, cho phép tick khi hoàn thành
+4. **Grounded in Docs** — mọi mục checklist phải map với tài liệu trong `Docs/`
+
+## Constraints
+
+- DO: Bám sát lifecycle-checklist-and-folder-structure.md, dùng tiếng Việt (trừ thuật ngữ kỹ thuật)
+- DON'T: Thêm giai đoạn hoặc checklist không có trong Docs
+- Output: Markdown, dễ tick (checkbox `- [ ]` hoặc `□`)
+
+## Expected Output Format
+
+File `Docs/check.list.md` theo format tương tự:
+
+```markdown
+# Plan Checklist — [Tên Project]
+
+## Giai đoạn hiện tại
+- **Life-X** — [Tên giai đoạn]
+- Cập nhật: [date]
+
+## Đang làm
+- [ ] [Công việc 1]
+- [ ] [Công việc 2]
+
+## Cần làm tiếp (Priority)
+1. [Công việc tiếp theo]
+2. [...]
+
+## Checklist theo giai đoạn
+### Life-1 — Định hướng
+- [ ] 1.1 ...
+- [ ] 1.2 ...
+### Life-2 — Phân tích & Thiết kế
+...
+### Life-3 — Triển khai
+...
+### Life-4 — Verify
+...
+```
+
+## Success Criteria
+
+- [ ] File check.list.md có đủ 4 phần: Giai đoạn hiện tại, Đang làm, Cần làm tiếp, Checklist theo giai đoạn
+- [ ] Checklist map với lifecycle-checklist-and-folder-structure.md
+- [ ] Người dùng có thể tick và cập nhật dễ dàng
+    ]]>
+  </improved-prompt>
+
+  <change-summary lang="vi">
+    <heading>Tóm tắt thay đổi</heading>
+    <items>
+      <item><strong>Thêm Role:</strong> Xác định AI là docs-driven specialist, mọi đề xuất bám sát Docs/</item>
+      <item><strong>Thêm Context:</strong> Project, agent docs-driven-developer, file target, nguồn tham chiếu (lifecycle-checklist-and-folder-structure.md, product-vision), bảng 4 giai đoạn</item>
+      <item><strong>Làm rõ Task:</strong> 3 mục tiêu cụ thể (giai đoạn hiện tại, đang làm, cần làm tiếp) thay vì mô tả chung chung</item>
+      <item><strong>Thêm Instructions:</strong> 4 bước thực hiện (đọc lifecycle, đọc cấu trúc thư mục, tạo file, grounded in Docs)</item>
+      <item><strong>Thêm Constraints:</strong> DO/DON'T và format output (Markdown, checkbox)</item>
+      <item><strong>Thêm Expected Output Format:</strong> Template mẫu cho check.list.md với 4 phần chính</item>
+      <item><strong>Sửa typo:</strong> "biến" → "biết"</item>
+    </items>
+  </change-summary>
+</prompt-improver-output>

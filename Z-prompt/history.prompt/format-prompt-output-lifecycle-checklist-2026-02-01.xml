@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Format-Prompt Output: Checklist Vòng Đời Phát Triển Website
+  Created: 2026-02-01
+  Input: Prompt gốc về xây dựng checklist giai đoạn vòng đời phát triển website
+  Tóm tắt thay đổi: Bổ sung Context (project, NotebookLM, thư mục tài liệu),
+  cấu trúc rõ ràng 4 giai đoạn, kiến trúc thư mục cho từng giai đoạn, hướng dẫn
+  tích hợp NotebookLM, format output cụ thể.
+-->
+
+<prompt version="1.0">
+
+<role>
+Bạn là Software Architect &amp; Technical Writer có chuyên môn về:
+- Quy trình phát triển phần mềm (SDLC) và Quy trình 7 bước sản xuất phần mềm (Bộ TT&amp;TT)
+- Thiết kế kiến trúc tài liệu dự án và quản lý tài sản tri thức
+- Cấu trúc thư mục chuẩn cho dự án Next.js / fullstack
+</role>
+
+<context>
+  <project>
+    <name>Website Mạng Xã Hội Chia Sẻ Kiến Thức</name>
+    <tech_stack>Next.js 16 + React 19 + TypeScript + Payload CMS + MongoDB + Tailwind + Shadcn UI</tech_stack>
+    <docs_root>/home/steve/Documents/Intern/work/KLTN/Docs/life-1</docs_root>
+  </project>
+
+  <reference_sources>
+    <notebooklm>
+      <purpose>Học codebase, tài nguyên kỹ thuật, best practices</purpose>
+      <url_1>https://notebooklm.google.com/notebook/46ddeb54-c391-43df-95f2-53c820428ada</url_1>
+      <note_1>Tài nguyên tổng quát: SDLC, AI trong phát triển, thiết kế kiến trúc</note_1>
+      <url_2>https://notebooklm.google.com/notebook/54c93705-0398-4ded-b698-61c44ce692f8</url_2>
+      <note_2>Template kiến trúc dự án Next.js: folder structure, conventions</note_2>
+      <usage>
+        Khi cần tham chiếu: python3 scripts/run.py ask_question.py --question "..." --notebook-url "[URL]"
+        Vị trí skill: ~/.cursor/skills/notebooklm/
+      </usage>
+    </notebooklm>
+    <existing_docs>
+      <file>Docs/life-1/arhitacture-V2.md</file>
+      <content>Roadmap điều chỉnh demo, checklist giai đoạn 1, MVP sprints, research tasks</content>
+      <file>Docs/life-1/artkitacture.md</file>
+      <content>Kiến trúc tổng thể 7 bước, MVP matrix, database schema, technical architecture</content>
+    </existing_docs>
+  </reference_sources>
+</context>
+
+<task>
+Xây dựng **Checklist đầy đủ cho vòng đời phát triển website**, bao gồm:
+
+1. **4 Giai đoạn chính** với mục tiêu, checklist công việc, deliverables
+2. **Kiến trúc thư mục dự kiến** cho từng giai đoạn - nơi lưu trữ tài liệu
+3. **Mapping sơ đồ thiết kế** (ER, UseCase, Sequence, Flow, Class, DB, UI, API) vào giai đoạn 2
+4. **Đường đi triển khai** rõ ràng để AI agent / code generation tham chiếu
+</task>
+
+<instructions>
+  <phase name="preparation">
+    1. (Tùy chọn) Query NotebookLM nếu cần chi tiết về: Quy trình 7 bước, kiến trúc Next.js
+    2. Đọc tài liệu hiện có: arhitacture-V2.md, artkitacture.md
+    3. Ánh xạ yêu cầu người dùng vào 4 giai đoạn đã định nghĩa
+  </phase>
+
+  <phase name="output_structure">
+    4. Xuất checklist theo cấu trúc: Giai đoạn → Mục tiêu → Checklist → Deliverables → Thư mục lưu trữ
+    5. Đảm bảo mỗi loại sơ đồ thiết kế có vị trí file rõ ràng trong kiến trúc thư mục
+    6. Giai đoạn 3: tham chiếu spec từ giai đoạn 2 cho AI code generation
+  </phase>
+</instructions>
+
+<requirements>
+  <must_have>
+    - Giai đoạn 1: Định hướng, tài liệu kỹ thuật cơ bản, kim chỉ nam
+    - Giai đoạn 2: Phân tích thiết kế với đủ 8 loại sơ đồ (ER, UseCase, Sequence, Flow, Class, DB, UI frame, API)
+    - Giai đoạn 3: Setup, xây dựng, spec-driven, test &lt;=&gt; AI agent
+    - Giai đoạn 4: Verify kết quả
+    - Kiến trúc thư mục cho TỪNG giai đoạn, không trùng lặp
+  </must_have>
+
+  <constraints>
+    - Phản hồi bằng tiếng Việt
+    - Output: Markdown hoặc XML
+    - Có thể tạo file thực tế trong Docs/life-1 khi được yêu cầu
+  </constraints>
+</requirements>
+
+<expected_output_format>
+  <section id="overview">Tổng quan 4 giai đoạn</section>
+  <section id="phase1">Giai đoạn 1: Định hướng - Checklist + Thư mục</section>
+  <section id="phase2">Giai đoạn 2: Phân tích Thiết kế - 8 sơ đồ + Thư mục</section>
+  <section id="phase3">Giai đoạn 3: Triển khai - Checklist + Thư mục</section>
+  <section id="phase4">Giai đoạn 4: Verify - Checklist + Thư mục</section>
+  <section id="folder_architecture">Cây thư mục tổng thể dự kiến</section>
+</expected_output_format>
+
+<success_criteria>
+  - Mỗi giai đoạn có checklist có thể tick (□ / ✓)
+  - Mỗi loại tài liệu có đường dẫn file rõ ràng
+  - AI agent có thể đọc spec từ giai đoạn 2 để sinh code
+  - NotebookLM được ghi chú là nguồn tham khảo khi cần
+</success_criteria>
+
+</prompt>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Output từ /format-prompt: Xây dựng bộ agent skill SSE realtime.
+  Tạo: 2026-02-01
+  Skill: prompt-improver + tài nguyên SKILL.md, Docs/life-1/03-research/sse-nextjs.md
+-->
+<format-prompt-output>
+  <summary lang="vi">
+    <analysis>
+      <goal>Xây dựng bộ agent skill khi làm việc với SSE realtime</goal>
+      <issues>
+        <issue severity="major">Thiếu cấu trúc: không có Role, Instructions từng bước, Output format</issue>
+        <issue severity="major">Context chưa đủ: chưa nêu vị trí lưu skill (.cursor/skills vs root), quy ước format skill trong repo</issue>
+        <issue severity="minor">Task mơ hồ: "xây dựng" = tạo mới 5 file skill hay chỉ nâng cấp nội dung từ SKILL.md?</issue>
+        <issue severity="minor">Thiếu ràng buộc: có mirror sang .claude/skills không, ngôn ngữ nội dung skill (vi/en)</issue>
+      </issues>
+      <codebase-context>
+        Skills nằm tại .cursor/skills/&lt;skill-name&gt;/SKILL.md (có mirror .claude/skills/).
+        Mỗi skill: YAML frontmatter (name, description, optional license, compatibility, metadata) + nội dung Markdown có cấu trúc (Input, Steps, v.v.).
+        Tài nguyên: root SKILL.md (outline 5 skills), Docs/life-1/03-research/sse-nextjs.md (prototype route, Payload hooks, React component, Mermaid).
+      </codebase-context>
+    </analysis>
+    <changes-made>
+      <item>Bổ sung Role và Context (project, đường dẫn tài nguyên, quy ước thư mục skill)</item>
+      <item>Task tách rõ: tạo 5 skill folders + nội dung từ outline + bổ sung từ research</item>
+      <item>Instructions step-by-step (đọc tài nguyên → chuẩn hóa frontmatter → viết nội dung → vị trí file)</item>
+      <item>Output format: 5 thư mục, đường dẫn file tạo/sửa, ghi chú vị trí theo user rule</item>
+      <item>Constraints: format frontmatter giống skill hiện có, dùng code mẫu từ sse-nextjs.md khi phù hợp</item>
+      <item>Bổ sung cấu trúc skill: thư mục templates/, resources/REFERENCES.md; bảng template từng skill; tài nguyên tham chiếu chung và per-skill (file repo + URL MDN, Next.js, Payload)</item>
+    </changes-made>
+  </summary>
+
+  <!-- ========== CẤU TRÚC SKILL: THƯ MỤC, TEMPLATE, TÀI NGUYÊN THAM CHIẾU ========== -->
+  <skill-structure>
+    <directory-structure>
+      <description>Mỗi skill là một thư mục chứa SKILL.md, thư mục templates/ (tùy chọn), và file tài nguyên tham chiếu.</description>
+      <tree>
+        .cursor/skills/sse-{name}/
+        ├── SKILL.md              # Nội dung chính của skill (bắt buộc)
+        ├── templates/            # Code mẫu / snippet tái sử dụng (tùy chọn)
+        │   └── *.example.ts hoặc *.example.tsx
+        └── resources/            # Tài liệu tham chiếu nội bộ (tùy chọn)
+            └── REFERENCES.md     # Liệt kê link + đường dẫn file tham chiếu
+      </tree>
+      <note>Nếu skill đơn giản, có thể chỉ có SKILL.md; templates/ và resources/ chỉ thêm khi skill cần snippet tách riêng hoặc nhiều tài liệu tham chiếu.</note>
+    </directory-structure>
+
+    <templates-by-skill>
+      <skill name="sse-basics">
+        <templates>
+          <file path=".cursor/skills/sse-basics/templates/route-handler.example.ts">Route Handler GET trả về text/event-stream, TransformStream/ReadableStream, encoder.write + close.</file>
+          <file path=".cursor/skills/sse-basics/templates/client-eventsource.example.tsx">Client useEffect + EventSource, onmessage parse JSON, cleanup close.</file>
+        </templates>
+      </skill>
+      <skill name="sse-debugging">
+        <templates>
+          <file path=".cursor/skills/sse-debugging/templates/heartbeat.example.ts">setInterval gửi ':\n\n', clearInterval on abort.</file>
+          <file path=".cursor/skills/sse-debugging/templates/client-error-reconnect.example.tsx">onerror, close, setTimeout retry (exponential backoff gợi ý).</file>
+        </templates>
+      </skill>
+      <skill name="sse-scaling">
+        <templates>
+          <file path=".cursor/skills/sse-scaling/templates/redis-subscribe.example.ts">ioredis subscribe channel, on message → writer.write(encoder.encode('data: ...\n\n')).</file>
+        </templates>
+      </skill>
+      <skill name="sse-payload-integration">
+        <templates>
+          <file path=".cursor/skills/sse-payload-integration/templates/after-change-hook.example.ts">Payload afterChange hook gọi triggerNotification(userId, data).</file>
+          <file path=".cursor/skills/sse-payload-integration/templates/route-with-auth.example.ts">GET verify JWT, EventEmitter.on + heartbeat + request.signal abort cleanup.</file>
+        </templates>
+      </skill>
+      <skill name="sse-ai-optimization">
+        <templates>
+          <file path=".cursor/skills/sse-ai-optimization/templates/prompts.example.md">Prompt mẫu: Generate / Refactor / Test SSE.</file>
+        </templates>
+      </skill>
+    </templates-by-skill>
+
+    <reference-resources>
+      <shared>
+        <resource type="file" path="SKILL.md">Outline 5 skills, frontmatter + nội dung mẫu từng skill.</resource>
+        <resource type="file" path="Docs/life-1/03-research/sse-nextjs.md">Prototype: route JWT + EventEmitter, Payload hook, React Notifications, Mermaid diagram.</resource>
+      </shared>
+      <external>
+        <resource type="url" href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">MDN: Server-Sent Events API.</resource>
+        <resource type="url" href="https://nextjs.org/docs/app/building-your-application/routing/route-handlers">Next.js: Route Handlers (streaming).</resource>
+        <resource type="url" href="https://payloadcms.com/docs/hooks/overview">Payload CMS: Hooks overview (afterChange, etc.).</resource>
+      </external>
+      <per-skill>
+        <skill name="sse-basics">SKILL.md (root), sse-nextjs.md (route + client), MDN SSE, Next.js Route Handlers.</skill>
+        <skill name="sse-debugging">sse-nextjs.md (heartbeat, cleanup), Vercel streaming/buffering docs.</skill>
+        <skill name="sse-scaling">sse-nextjs.md (Redis gợi ý), ioredis, Vercel limits/Fluid Compute.</skill>
+        <skill name="sse-payload-integration">sse-nextjs.md (full flow), Payload hooks, root SKILL.md (hook pattern).</skill>
+        <skill name="sse-ai-optimization">Root SKILL.md (AI tips, prompts), openspec-* skills (workflow chain).</skill>
+      </per-skill>
+    </reference-resources>
+  </skill-structure>
+
+  <!-- ========== PROMPT ĐÃ NÂNG CẤP (sẵn sàng dùng) ========== -->
+  <improved-prompt>
+    <![CDATA[
+## Role
+Bạn là người xây dựng agent skills cho Cursor/Claude. Nhiệm vụ: tạo bộ skill chuẩn hóa khi làm việc với SSE (Server-Sent Events) realtime, dựa trên outline và research có sẵn trong repo.
+
+## Context
+### Project & tech stack
+- Project: OpenSpec-based, có Payload CMS, Next.js (App Router).
+- Realtime: SSE one-way (server → client), dùng cho notifications/feeds; có tích hợp Payload hooks và (option) Redis.
+
+### Tài nguyên bắt buộc
+- **SKILL.md** (root): Outline 5 skills — SSE Basics, SSE Debugging, SSE Scaling, SSE Integration with Payload, SSE AI Optimization. Mỗi skill có frontmatter (name, description, triggers) và nội dung mẫu (concepts, code snippets, AI tips).
+- **Docs/life-1/03-research/sse-nextjs.md**: Research + prototype gồm: route handler SSE với JWT auth, EventEmitter/Redis, heartbeat, cleanup on abort; Payload afterChange hook (Posts); React component Notifications (EventSource, reconnection); Mermaid sequence diagram.
+
+### Quy ước skill trong repo
+- Mỗi skill nằm trong **.cursor/skills/<skill-name>/SKILL.md** (ví dụ: `.cursor/skills/sse-basics/SKILL.md`).
+- Frontmatter: `name`, `description`, có thể thêm `license`, `compatibility`, `metadata` (theo các skill openspec-* hiện có).
+- Nội dung: Markdown có cấu trúc rõ (sections, steps, code blocks). Có thể thêm trường `triggers` trong frontmatter hoặc ghi trong description để agent biết khi nào dùng.
+
+### Cấu trúc thư mục mỗi skill (đi kèm templates + tài nguyên tham chiếu)
+```
+.cursor/skills/sse-{name}/
+├── SKILL.md              # Bắt buộc: nội dung chính skill
+├── templates/            # Tùy chọn: code mẫu tái sử dụng (*.example.ts / *.example.tsx / *.example.md)
+└── resources/            # Tùy chọn: tài liệu tham chiếu nội bộ
+    └── REFERENCES.md     # Liệt kê đường dẫn file + URL tham chiếu cho skill đó
+```
+- **sse-basics**: templates/ gồm route-handler.example.ts, client-eventsource.example.tsx.
+- **sse-debugging**: templates/ gồm heartbeat.example.ts, client-error-reconnect.example.tsx.
+- **sse-scaling**: templates/ gồm redis-subscribe.example.ts.
+- **sse-payload-integration**: templates/ gồm after-change-hook.example.ts, route-with-auth.example.ts.
+- **sse-ai-optimization**: templates/ gồm prompts.example.md.
+Tài nguyên tham chiếu chung: root SKILL.md, Docs/life-1/03-research/sse-nextjs.md; ngoài repo: MDN Server-Sent Events, Next.js Route Handlers, Payload Hooks. Mỗi skill có thể có resources/REFERENCES.md liệt kê đúng tài liệu dùng cho skill đó.
+
+## Task
+Xây dựng **đủ 5 agent skills** cho SSE realtime:
+
+1. **sse-basics** – Implement cơ bản (Route Handler, EventSource, format text/event-stream, retry).
+2. **sse-debugging** – Debug & xử lý lỗi (buffering Vercel, heartbeat, reconnect, client onerror).
+3. **sse-scaling** – Scaling & production (Redis pub/sub, fan-out, timeout/limits).
+4. **sse-payload-integration** – Tích hợp Payload CMS (afterChange hook, trigger event, flow hook → stream).
+5. **sse-ai-optimization** – Ứng dụng AI để generate/debug/test SSE nhanh (prompts mẫu, chain agents).
+
+Nội dung mỗi skill: chuẩn hóa từ outline trong root **SKILL.md**, bổ sung chi tiết và code từ **Docs/life-1/03-research/sse-nextjs.md** khi phù hợp (ví dụ: auth, heartbeat, cleanup, Payload hook, component React).
+
+## Instructions
+1. Đọc toàn bộ **SKILL.md** (root) và **Docs/life-1/03-research/sse-nextjs.md**.
+2. Với từng skill (1–5):
+   - Tạo thư mục `.cursor/skills/<skill-name>/` nếu chưa có.
+   - Tạo/sửa file **SKILL.md** trong thư mục đó (frontmatter + nội dung; sections: Core concepts / Implementation / Patterns / Code / AI tips; dùng code từ research khi liên quan).
+   - Tạo thư mục **templates/** và các file template theo từng skill:
+     - sse-basics: route-handler.example.ts, client-eventsource.example.tsx
+     - sse-debugging: heartbeat.example.ts, client-error-reconnect.example.tsx
+     - sse-scaling: redis-subscribe.example.ts
+     - sse-payload-integration: after-change-hook.example.ts, route-with-auth.example.ts
+     - sse-ai-optimization: prompts.example.md
+     Nội dung template lấy từ research hoặc SKILL.md, đủ để copy-paste hoặc tham chiếu.
+   - (Tùy chọn) Tạo **resources/REFERENCES.md** liệt kê tài nguyên tham chiếu: đường dẫn file trong repo (SKILL.md, sse-nextjs.md) và URL ngoài (MDN SSE, Next.js Route Handlers, Payload Hooks). Có thể tách per-skill theo block reference-resources.
+3. Ghi chú rõ **vị trí file tạo hoặc sửa** cho từng skill (đường dẫn đầy đủ), kể cả file trong templates/ và resources/.
+
+## Constraints
+- DO: Giữ format frontmatter và cấu trúc markdown tương tự các skill trong `.cursor/skills/openspec-*`. Dùng đúng tên slug (sse-basics, sse-debugging, sse-scaling, sse-payload-integration, sse-ai-optimization).
+- DO: Lấy code mẫu từ sse-nextjs.md (route, heartbeat, cleanup, Payload hook, Notifications component) để đưa vào skill tương ứng, tránh trùng lặp không cần thiết.
+- DON'T: Không tạo skill ngoài 5 skill trên trong bước này. Không đổi cấu trúc thư mục skills hiện có.
+
+## Expected Output
+- Năm thư mục skill, mỗi thư mục gồm: **SKILL.md** (bắt buộc); **templates/** với file *.example.ts | *.example.tsx | *.example.md theo bảng từng skill; **resources/REFERENCES.md** (tùy chọn) liệt kê đường dẫn file + URL tham chiếu.
+- Đường dẫn SKILL.md: .cursor/skills/sse-basics/SKILL.md, sse-debugging/SKILL.md, sse-scaling/SKILL.md, sse-payload-integration/SKILL.md, sse-ai-optimization/SKILL.md.
+- Mỗi lần tạo hoặc sửa file: ghi rõ **“File tạo: &lt;path&gt;”** hoặc **“File sửa: &lt;path&gt;”** trong phản hồi.
+- (Tùy chọn) Nếu repo mirror sang .claude/skills/, liệt kê các file/thư mục cần copy (bao gồm templates/ và resources/).
+
+## Success Criteria
+- [ ] Đủ 5 skill, đúng tên và cấu trúc thư mục (SKILL.md + templates/ + resources/ theo mô tả).
+- [ ] Mỗi SKILL.md có frontmatter hợp lệ và nội dung dựa trên outline + research.
+- [ ] Mỗi skill có đủ file template theo bảng (route-handler, client, heartbeat, redis, hook, prompts tùy skill).
+- [ ] Code/ví dụ từ sse-nextjs.md được dùng ở SKILL.md và templates liên quan.
+- [ ] Tài nguyên tham chiếu (REFERENCES.md hoặc trong SKILL.md) nêu rõ file repo + URL (MDN, Next.js, Payload).
+- [ ] Vị trí file tạo/sửa được ghi chú rõ ràng.
+    ]]>
+  </improved-prompt>
+</format-prompt-output>
