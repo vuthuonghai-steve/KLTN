@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Prompt đã nâng cấp: Xây dựng file rule cho Barrel File Pattern
+  Định dạng: XML (dùng cho Cursor/Claude rule)
+  Vị trí lưu: Z-prompt/format-prompt-output-barrel-rule.xml
+-->
+<prompt>
+  <role>
+    Bạn là người viết rule (quy ước mã) cho AI Agent. Nhiệm vụ: xây dựng nội dung file rule áp dụng cho Barrel File Pattern, định dạng XML, để AI tuân thủ khi tạo hoặc sửa code trong project.
+  </role>
+
+  <context>
+    <project>
+      <name>KLTN - Website mạng xã hội chia sẻ kiến thức</name>
+      <tech_stack>Next.js 15, React 19, TypeScript, Payload CMS, MongoDB</tech_stack>
+      <rule_location>.claude/rules/Barrel-File-Pattern.rule.xml</rule_location>
+    </project>
+    <barrel_pattern_definition>
+      Barrel file là file index.ts (hoặc index.js) dùng để re-export nhiều module từ một thư mục, tạo một entry point duy nhất (public API) cho thư mục đó. Ví dụ: thay vì import từ đường dẫn sâu, user import từ thư mục — import { Button } from '@/components/ui' thay vì import { Button } from '@/components/ui/Button/Button'.
+    </barrel_pattern_definition>
+    <output_format>
+      File rule phải là XML hợp lệ, có thể chứa các thẻ mô tả (description), phạm vi áp dụng (scope), hướng dẫn (guidelines), ví dụ (examples), và ràng buộc (constraints).
+    </output_format>
+  </context>
+
+  <task>
+    Sinh hoặc cập nhật nội dung file rule cho Barrel File Pattern, đảm bảo:
+    1. Định nghĩa rõ khi nào dùng barrel file (thư mục components, utils, hooks, v.v.).
+    2. Quy ước đặt tên: dùng index.ts (TypeScript) hoặc index.js (JavaScript).
+    3. Re-export rõ ràng: ưu tiên export tường minh từng thành phần, hạn chế export *.
+    4. Tránh anti-pattern: barrel lồng barrel quá sâu gây tree-shaking kém; không export toàn bộ thư mục khi chỉ cần một phần.
+  </task>
+
+  <requirements>
+    <must_have>
+      - Nội dung rule bằng tiếng Việt hoặc tiếng Anh, nhất quán.
+      - Có ít nhất một ví dụ code đúng (do) và một ví dụ tránh (don't).
+      - File rule XML có cấu trúc rõ ràng (description, guidelines, examples).
+    </must_have>
+    <constraints>
+      - Không thêm logic hoặc code ứng dụng; chỉ mô tả quy ước và hướng dẫn.
+      - Rule áp dụng cho toàn project (TypeScript/JavaScript, Next.js).
+    </constraints>
+  </requirements>
+
+  <expected_output>
+    Một file XML chứa:
+    - Phần mô tả ngắn (Barrel File Pattern là gì, mục đích).
+    - Phạm vi: thư mục nào nên có barrel (components, ui, utils, hooks, ...).
+    - Hướng dẫn: cách viết index.ts (re-export tường minh, tránh export * tùy tiện).
+    - Ví dụ: đoạn code mẫu đúng và đoạn cần tránh.
+    - Ràng buộc: không barrel cho từng file đơn lẻ; không tạo barrel cho thư mục chỉ có 1 file trừ khi có lý do (tương lai mở rộng).
+  </expected_output>
+
+  <example>
+    <do>
+      // components/ui/index.ts
+      export { Button } from './Button';
+      export { Input } from './Input';
+      export type { ButtonProps, InputProps } from './types';
+    </do>
+    <dont>
+      // components/ui/index.ts — tránh
+      export * from './Button';
+      export * from './Input';
+      export * from './nested/internal'; // lộ API nội bộ
+    </dont>
+  </example>
+</prompt>

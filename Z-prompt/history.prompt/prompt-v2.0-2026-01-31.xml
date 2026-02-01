@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Prompt Version: 2.0
+  Created: 2026-01-31
+  Description: Prompt cải thiện cho việc xây dựng kiến trúc tổng thể website mạng xã hội
+  Changes from v1.0:
+    - Tích hợp MVP features (10 tính năng) từ prompt.md
+    - Thêm Social Bookmarking scope từ social-bookmarking-mvp.md
+    - Thêm Technical challenges
+    - Instructions chi tiết với 5 bước cụ thể
+    - Thêm Success Criteria
+    - Mở rộng Expected Output (5 sections)
+-->
+<prompt version="2.0">
+
+<role>
+Bạn là một Software Architect &amp; Project Manager có chuyên môn về:
+- Quy trình phát triển phần mềm (SDLC) và Quy trình 7 bước sản xuất phần mềm (Bộ TT&amp;TT)
+- Ứng dụng AI trong xây dựng và phát triển website
+- Thiết kế kiến trúc tổng thể cho dự án công nghệ
+- Phát triển mạng xã hội (Social Network) theo mô hình content-centric
+</role>
+
+<context>
+  <project>
+    <name>Website Mạng Xã Hội Chia Sẻ Kiến Thức</name>
+    <type>Content-centric Social Network với Social Bookmarking</type>
+    <domain>Nền tảng chia sẻ thông tin về công nghệ, cuộc sống và công việc</domain>
+    <research_topic>Nghiên cứu ứng dụng AI trong xây dựng và phát triển website mạng xã hội</research_topic>
+    <current_phase>Giai đoạn 0 - Khởi tạo và lập kế hoạch tổng thể</current_phase>
+  </project>
+  
+  <reference_knowledge>
+    <source>NotebookLM</source>
+    <url>https://notebooklm.google.com/notebook/46ddeb54-c391-43df-95f2-53c820428ada</url>
+    <content_overview>
+      - Quy trình 7 bước sản xuất phần mềm (Bộ TT&amp;TT)
+      - Vòng đời SDLC và các mô hình (Waterfall, Agile, Spiral, V-Model)
+      - AI hỗ trợ trong từng giai đoạn SDLC
+      - Thiết kế UI/UX, kiến trúc phần mềm (MVC, N-tier)
+      - Next.js, Payload CMS, MongoDB, Tailwind CSS, TypeScript, Shadcn UI
+      - Pháp lý mạng xã hội tại Việt Nam
+    </content_overview>
+  </reference_knowledge>
+
+  <tech_stack>
+    <frontend>Next.js 15 + React 19</frontend>
+    <backend>Payload CMS</backend>
+    <database>MongoDB</database>
+    <css>Tailwind CSS</css>
+    <ui_library>Shadcn UI</ui_library>
+    <language>TypeScript</language>
+    <hosting>Vercel</hosting>
+    <version_control>Git</version_control>
+    <methodology>Agile/Scrum</methodology>
+  </tech_stack>
+
+  <mvp_features priority="P0-Core">
+    <!-- 10 tính năng cốt lõi theo thứ tự ưu tiên -->
+    <feature id="1" name="Authentication">Đăng ký/Đăng nhập (Email + password, OAuth Google/Facebook)</feature>
+    <feature id="2" name="User Profile">Hồ sơ người dùng (avatar, bio, danh sách follow)</feature>
+    <feature id="3" name="News Feed">Bảng tin hiển thị bài viết (thuật toán/timeline)</feature>
+    <feature id="4" name="Post Creation">Tạo bài viết (text, ảnh, video, link, tag)</feature>
+    <feature id="5" name="Interactions">Tương tác cơ bản (Like, Comment, Share)</feature>
+    <feature id="6" name="Connections">Hệ thống kết nối (Follow/Unfollow, Block)</feature>
+    <feature id="7" name="Notifications">Hệ thống thông báo (like, comment, mention, follow)</feature>
+    <feature id="8" name="Messaging">Chat/Tin nhắn cá nhân (1-1)</feature>
+    <feature id="9" name="Search">Tìm kiếm &amp; Khám phá (user, post, hashtag)</feature>
+    <feature id="9b" name="Bookmarking">Lưu bài viết + trang Bài đã lưu (Social Bookmarking MVP)</feature>
+    <feature id="10" name="Privacy">Quản lý quyền riêng tư</feature>
+  </mvp_features>
+
+  <social_bookmarking_scope>
+    <mvp_v1>Lưu bài viết (Save post) + trang "Bài đã lưu"</mvp_v1>
+    <mvp_v2>Bộ sưu tập (Collections/Folders)</mvp_v2>
+    <future>Lưu link ngoài + ghi chú + public collection</future>
+    <note>Content-centric SNS cần Social Bookmarking để người dùng "đọc sau" và ôn lại kiến thức</note>
+  </social_bookmarking_scope>
+
+  <technical_challenges>
+    <!-- Vấn đề kỹ thuật lớn cần giải quyết -->
+    <challenge id="1">News Feed hiệu quả (fan-out on write / hybrid)</challenge>
+    <challenge id="2">Scale realtime (chat, notification) - WebSocket + Message Queue</challenge>
+    <challenge id="3">Upload file lớn (video) - chunk upload + resumable</challenge>
+    <challenge id="4">Bảo mật (XSS, CSRF, rate limiting, bcrypt/Argon2, GDPR-like)</challenge>
+    <challenge id="5">Content moderation (report system + AI moderation)</challenge>
+  </technical_challenges>
+</context>
+
+<task>
+Xây dựng BẢN KIẾN TRÚC TỔNG THỂ cho vòng đời phát triển website mạng xã hội chia sẻ kiến thức, bao gồm:
+
+1. **Roadmap tổng thể** - Liệt kê TẤT CẢ các giai đoạn từ ý tưởng đến vận hành (theo Quy trình 7 bước)
+2. **Chi tiết Giai đoạn 1 - Xác định yêu cầu** - Để bắt đầu triển khai ngay
+3. **Checklist công việc** cho từng giai đoạn với deliverables cụ thể
+4. **AI Integration Points** - Nơi nào AI có thể hỗ trợ trong từng giai đoạn
+5. **MVP Implementation Plan** - Lộ trình triển khai 10 tính năng MVP
+</task>
+
+<instructions>
+  <step order="1">
+    Truy vấn NotebookLM để lấy chi tiết Quy trình 7 bước sản xuất phần mềm
+    Query: "Chi tiết từng bước trong Quy trình 7 bước sản xuất phần mềm? Mỗi bước cần làm gì và deliverables là gì?"
+  </step>
+  <step order="2">
+    Truy vấn NotebookLM về AI integration trong SDLC
+    Query: "AI hỗ trợ như thế nào trong từng giai đoạn của SDLC? Liệt kê cụ thể công cụ và use case"
+  </step>
+  <step order="3">
+    Tổng hợp kiến thức và xây dựng Roadmap tổng thể (mapping 7 bước → MVP features)
+  </step>
+  <step order="4">
+    Chi tiết hóa Giai đoạn 1 với checklist actionable
+  </step>
+  <step order="5">
+    Output theo format đã định nghĩa
+  </step>
+</instructions>
+
+<requirements>
+  <must_have>
+    - Dựa trên Quy trình 7 bước sản xuất phần mềm từ NotebookLM
+    - Áp dụng mô hình Agile/Scrum phù hợp dự án cá nhân/nhóm nhỏ
+    - Xác định rõ sản phẩm đầu ra (deliverables) của từng giai đoạn
+    - Mapping MVP features vào các giai đoạn phát triển
+    - Tích hợp Social Bookmarking như tính năng cốt lõi (content-centric)
+    - Xác định technical challenges và giải pháp dự kiến
+  </must_have>
+  
+  <constraints>
+    - SỬ DỤNG skill NotebookLM để truy vấn kiến thức chi tiết
+    - Phản hồi bằng tiếng Việt
+    - Không triển khai code ở giai đoạn này, chỉ lập kế hoạch
+    - Focus vào planning, KHÔNG estimate timeline cụ thể (tuần/tháng)
+  </constraints>
+</requirements>
+
+<expected_output>
+  <section id="1" title="Roadmap Tổng Thể">
+    <!-- Dạng bảng mapping 7 bước → công việc → deliverables → AI support -->
+    | Giai đoạn | Tên (theo 7 bước) | Mục tiêu chính | Deliverables | AI Integration |
+    |-----------|-------------------|----------------|--------------|----------------|
+    | 1 | Xác định yêu cầu | ... | ... | ... |
+    | ... | ... | ... | ... | ... |
+  </section>
+
+  <section id="2" title="Chi Tiết Giai Đoạn 1 - Xác Định Yêu Cầu">
+    - Mục tiêu
+    - Công việc cụ thể (checklist có thể tick)
+    - Deliverables (danh sách file/tài liệu cần tạo)
+    - AI có thể hỗ trợ gì (tool + use case)
+    - Câu hỏi cần trả lời trước khi chuyển giai đoạn
+  </section>
+
+  <section id="3" title="MVP Implementation Matrix">
+    <!-- Mapping 10 MVP features → giai đoạn triển khai → priority -->
+    | Feature | Priority | Giai đoạn bắt đầu | Dependencies | Technical Notes |
+    |---------|----------|-------------------|--------------|-----------------|
+    | Authentication | P0 | 3 (Lập trình) | None | OAuth + JWT |
+    | ... | ... | ... | ... | ... |
+  </section>
+
+  <section id="4" title="Technical Architecture Preview">
+    - High-level architecture diagram (mô tả text)
+    - Database schema overview (collections chính)
+    - API endpoints categories
+  </section>
+
+  <section id="5" title="Câu Hỏi Cần Quyết Định">
+    <!-- Những quyết định cần đưa ra trước khi code -->
+    1. [Câu hỏi 1]
+    2. [Câu hỏi 2]
+    ...
+  </section>
+</expected_output>
+
+<success_criteria>
+  <criterion>Roadmap có đủ 7 giai đoạn theo quy trình Bộ TT&amp;TT</criterion>
+  <criterion>Mỗi giai đoạn có deliverables rõ ràng, có thể verify</criterion>
+  <criterion>10 MVP features được mapping vào roadmap</criterion>
+  <criterion>AI integration points được xác định cụ thể (tool + use case)</criterion>
+  <criterion>Giai đoạn 1 có checklist actionable để bắt đầu ngay</criterion>
+  <criterion>Technical challenges được nhận diện và có hướng giải quyết</criterion>
+</success_criteria>
+
+</prompt>

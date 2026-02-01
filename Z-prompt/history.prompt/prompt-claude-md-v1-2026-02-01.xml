@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Prompt: Xây dựng CLAUDE.md đầu tiên cho dự án
+  Phiên bản: 1.0
+  Ngày tạo: 2026-02-01
+  Mô tả: Prompt dành cho giai đoạn tiền-coding - tài liệu chuẩn bị, lên ý tưởng, định hướng, thiết kế kiến trúc
+  Tham chiếu: Z-prompt/prompt.xml
+-->
+<prompt version="1.0">
+
+<role>
+Bạn là một Technical Writer &amp; Software Architect có chuyên môn về:
+- Xây dựng tài liệu dự án chuẩn (CLAUDE.md, README, AGENTS.md)
+- Thiết kế kiến trúc phần mềm và lập kế hoạch phát triển
+- Định nghĩa context cho AI assistants (Claude Code, Cursor)
+- Quy trình phát triển phần mềm SDLC và giai đoạn tiền-coding
+</role>
+
+<context>
+  <project>
+    <name>Website Mạng Xã Hội Chia Sẻ Kiến Thức</name>
+    <type>Content-centric Social Network với Social Bookmarking</type>
+    <domain>Nền tảng chia sẻ thông tin về công nghệ, cuộc sống và công việc</domain>
+    <research_topic>Nghiên cứu ứng dụng AI trong xây dựng và phát triển website mạng xã hội</research_topic>
+  </project>
+
+  <current_phase>
+    Giai đoạn 0 — Khởi tạo và lập kế hoạch tổng thể
+    TRỌNG TÂM: Tạo tài liệu chuẩn bị trước khi xây dựng codebase và website
+    KHÔNG triển khai code ở giai đoạn này
+  </current_phase>
+
+  <phase_focus>
+    <item>Lên ý tưởng — Xác định và đánh giá ý tưởng sản phẩm</item>
+    <item>Xác định — Làm rõ yêu cầu, phạm vi, đối tượng người dùng</item>
+    <item>Định hướng — Chiến lược, roadmap, ưu tiên tính năng</item>
+    <item>Phân tích thiết kế kiến trúc — Sơ đồ tổng quan, mô hình dữ liệu, technical decisions</item>
+  </phase_focus>
+
+  <reference_files>
+    <file path="Z-prompt/prompt.xml">Context đầy đủ: tech stack, MVP features, technical challenges, research topic</file>
+    <file path="Z-prompt/prompt.md">10 tính năng MVP của mạng xã hội</file>
+    <file path="Z-prompt/social-bookmarking-mvp.md">Phạm vi Social Bookmarking trong MVP</file>
+  </reference_files>
+
+  <tech_stack>
+    <frontend>Next.js 15 + React 19</frontend>
+    <backend>Payload CMS</backend>
+    <database>MongoDB</database>
+    <css>Tailwind CSS</css>
+    <ui_library>Shadcn UI</ui_library>
+    <language>TypeScript</language>
+    <hosting>Vercel</hosting>
+    <methodology>Agile/Scrum</methodology>
+  </tech_stack>
+
+  <claude_md_special_case>
+    Dự án chưa có codebase. CLAUDE.md cần tập trung vào:
+    - Project overview và định hướng
+    - Kiến trúc dự kiến (không phải cấu trúc thư mục hiện có)
+    - Workflow và quy ước cho giai đoạn planning
+    - Tham chiếu tài liệu nguồn (Z-prompt, openspec)
+  </claude_md_special_case>
+</context>
+
+<task>
+Xây dựng file **CLAUDE.md** đầu tiên cho dự án, phù hợp với giai đoạn tiền-coding hiện tại.
+
+File này sẽ:
+1. Cung cấp context cho AI (Claude Code, Cursor) khi làm việc với dự án
+2. Định hướng AI tập trung vào planning và thiết kế, chưa triển khai code
+3. Tham chiếu tài liệu nguồn để AI truy vấn chi tiết khi cần
+4. Là nền tảng để bổ sung dần khi dự án chuyển sang giai đoạn coding
+</task>
+
+<instructions>
+  <step order="1">Đọc và tóm tắt nội dung từ Z-prompt/prompt.xml (tech stack, MVP, challenges)</step>
+  <step order="2">Xác định các section cần có trong CLAUDE.md cho giai đoạn 0 (tham khảo best practices từ Anthropic)</step>
+  <step order="3">Viết nội dung từng section — súc tích, dễ đọc, phù hợp AI context</step>
+  <step order="4">Đảm bảo có hướng dẫn workflow: khi nào explore, khi nào plan, khi nào implement</step>
+  <step order="5">Thêm ghi chú về việc cập nhật CLAUDE.md khi dự án chuyển giai đoạn</step>
+</instructions>
+
+<requirements>
+  <must_have>
+    - Phản ánh đúng giai đoạn 0: planning, không coding
+    - Có Project Overview (tên, loại, domain, research topic)
+    - Có Tech Stack với phiên bản khi có
+    - Có tham chiếu đến Z-prompt/, openspec/ — nơi chứa spec và prompt
+    - Có Workflow/Instructions cho AI: ưu tiên phân tích và thiết kế trước khi đề xuất code
+    - Ngắn gọn: &lt; 150 dòng (CLAUDE.md cần concise)
+  </must_have>
+
+  <should_have>
+    - Kiến trúc tổng quan dự kiến (text/mô tả)
+    - MVP features tổng quan
+    - Technical challenges cần lưu ý
+    - Câu hỏi quyết định chưa có đáp án (decision points)
+  </should_have>
+
+  <constraints>
+    - KHÔNG thêm cấu trúc thư mục chi tiết (app/, src/, components/) — chưa có codebase
+    - KHÔNG thêm lệnh build/test — chưa có project
+    - KHÔNG ước lượng timeline cụ thể
+    - Phản hồi nội dung file bằng tiếng Việt (có thể dùng thuật ngữ tiếng Anh khi cần)
+  </constraints>
+</requirements>
+
+<expected_output>
+  <format>Markdown</format>
+  <location>CLAUDE.md — đặt tại root project</location>
+
+  <sections_suggested>
+    <section id="1" name="Project Overview">Tên, loại, domain, giai đoạn hiện tại</section>
+    <section id="2" name="Current Phase &amp; Focus">Giai đoạn 0, trọng tâm planning</section>
+    <section id="3" name="Tech Stack">Next.js 15, React 19, Payload CMS, MongoDB, ...</section>
+    <section id="4" name="Reference Documentation">Z-prompt/, openspec/ — mô tả nội dung mỗi file</section>
+    <section id="5" name="Architecture Preview">Kiến trúc dự kiến (high-level)</section>
+    <section id="6" name="MVP Features Overview">10 tính năng cốt lõi, Social Bookmarking</section>
+    <section id="7" name="AI Workflow Instructions">Khi làm việc với dự án: explore → plan → (sau này) implement</section>
+    <section id="8" name="Technical Challenges">News Feed, scale realtime, upload, security, moderation</section>
+    <section id="9" name="Open Decisions">Câu hỏi cần quyết định trước khi code</section>
+  </sections_suggested>
+</expected_output>
+
+<success_criteria>
+  <criterion>File CLAUDE.md có thể đọc và hiểu nhanh bởi AI trong vòng vài giây</criterion>
+  <criterion>AI biết dự án đang ở giai đoạn planning, ưu tiên thiết kế thay vì code</criterion>
+  <criterion>AI biết tìm thêm context ở Z-prompt/, openspec/ khi cần chi tiết</criterion>
+  <criterion>Nội dung concis, không dài dòng</criterion>
+  <criterion>Có thể bổ sung section mới (dir structure, commands) khi chuyển sang giai đoạn coding</criterion>
+</success_criteria>
+
+</prompt>

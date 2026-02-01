@@ -1,0 +1,52 @@
+---
+description: Quy ước barrel file (index.ts) – re-export gọn, public API rõ, tree-shaking tốt
+globs: "**/{components,ui,utils,hooks,lib}/**/*.{ts,tsx,js,jsx},**/index.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+# Barrel File Pattern
+
+Barrel file là file `index.ts` (hoặc `index.js`) trong một thư mục, dùng để re-export các module của thư mục đó qua một entry point duy nhất. Mục đích: import gọn (ví dụ từ `@/components/ui` thay vì đường dẫn sâu), tạo public API rõ ràng, dễ refactor nội bộ.
+
+## Khi nào áp dụng
+
+- Tạo hoặc sửa thư mục chứa nhiều module cần expose: `components`, `ui`, `utils`, `hooks`, `lib`, api helpers.
+- Khi thêm file mới vào thư mục đã có barrel (`index.ts`): cập nhật barrel để export file mới nếu thuộc public API.
+
+## Quy ước
+
+**Tên file:** `index.ts` (TypeScript) hoặc `index.js` (JavaScript), đặt trong thư mục cần expose.
+
+**Re-export:**
+
+- Ưu tiên re-export tường minh từng thành phần (`export { A, B } from './A'`) để tree-shaking tốt và API rõ ràng.
+- Có thể dùng `export * from './subfolder'` chỉ khi subfolder có barrel riêng và đó là API công khai.
+- Không `export *` từ file implementation trực tiếp nếu file đó export nhiều thứ nội bộ (tránh lộ API private).
+
+**Phạm vi:**
+
+- Nên có barrel: `components`, `components/ui`, `utils`, `hooks`, `lib` (theo cấu trúc project).
+- Không bắt buộc barrel cho thư mục chỉ có 1 file, trừ khi dự kiến mở rộng hoặc thống nhất cách import.
+- Không tạo barrel cho từng file đơn lẻ (mỗi file một index.ts trong cùng thư mục con).
+
+## Ví dụ
+
+```typescript
+// ✅ GOOD – components/ui/index.ts
+export { Button } from './Button';
+export { Input } from './Input';
+export type { ButtonProps, InputProps } from './types';
+```
+
+```typescript
+// ❌ BAD – export * tràn lan, lộ implementation
+export * from './Button';
+export * from './Input';
+export * from './internal/helpers';
+```
+
+## Ràng buộc
+
+- KHÔNG export toàn bộ nội dung file nếu file đó chứa helper/type nội bộ không muốn public.
+- KHÔNG tạo chuỗi barrel quá sâu (barrel → barrel → barrel) nếu không cần; ưu tiên 1–2 cấp.
+- Khi thêm component/utils mới vào thư mục đã có `index.ts`: cập nhật `index.ts` để export thành phần mới (nếu thuộc public API).

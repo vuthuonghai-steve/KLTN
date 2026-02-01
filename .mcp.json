@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+      "julianoczkowski-anthropic-docs-mcp-ts": {
+        "args": [
+          "--transport",
+          "stdio"
+        ],
+        "command": "anthropic-docs-mcp"
+      }
+    }
+  }
