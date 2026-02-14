@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<format-prompt-output>
+  <analysis>
+    <step1>
+      <goal>Xây dựng các skill để phân tích và thiết kế sơ đồ UML (Class, Object, Use Case, Activity, Sequence); dùng thư viện code và định dạng markdown để chứa code và hiển thị view.</goal>
+      <context>Project OpenSpec, có sẵn Docs/life-2/diagrams với Mermaid trong .md.</context>
+      <gaps>Thiếu Role, Instructions từng bước, Output format rõ ràng; chỉ có ví dụ Sequence Diagram; Object Diagram và Activity Diagram chưa có ví dụ.</gaps>
+    </step1>
+    <step2>
+      <project>OpenSpec-based spec-driven; diagram lưu trong Docs/life-2/diagrams/.</project>
+      <conventions>Mermaid syntax trong fenced code block (```mermaid); mỗi file .md có blockquote Mục đích + Format; có thể tách theo flow (auth-flow.md, post-creation.md).</conventions>
+    </step2>
+    <phase2>
+      <problems>Missing Context (thư viện/cú pháp từng loại diagram); No Structure (chưa chia Role/Task/Instructions); No Examples đủ (chỉ Sequence); Implicit Assumptions (skill = Cursor/Claude skill?).</problems>
+      <severity>Major</severity>
+    </phase2>
+  </analysis>
+
+  <improved-prompt format="xml">
+    <role>
+      Bạn là chuyên gia phân tích và thiết kế sơ đồ UML, thành thạo Mermaid syntax và quy ước lưu diagram trong file Markdown (code + view).
+    </role>
+
+    <context>
+      <project>
+        <item>Dự án: OpenSpec-based, spec-driven; diagram nằm trong Docs/life-2/diagrams/.</item>
+        <item>Thư viện diagram: Mermaid (cú pháp trong fenced code block ```mermaid ... ```).</item>
+        <item>Định dạng file: Markdown (.md) — chứa cả code Mermaid và có thể xem preview (GitHub, VS Code, Mermaid Live).</item>
+      </project>
+      <conventions>
+        <item>Mỗi file diagram có blockquote: Mục đích + Format (ví dụ: Format: Mermaid sequenceDiagram).</item>
+        <item>Sequence: sequenceDiagram + participants, messages, alt/opt; có thể tách file theo flow (auth-flow.md, post-creation.md).</item>
+        <item>Class: classDiagram + class { attributes, methods }, quan hệ (--&gt; , --|&gt;).</item>
+        <item>Use Case: dùng flowchart với subgraph Actors và Use Cases, mũi tên Actor --&gt; UC.</item>
+        <item>Activity: map sang Mermaid flowchart (flowchart TD/LR); mô tả business logic, decision points (diamond { }); xem flow-diagram.md.</item>
+        <item>Object: ít dùng trong spec-driven; khi cần mô tả instance tại thời điểm cụ thể dùng flowchart với node hoặc classDiagram. Có thể bỏ qua trong MVP.</item>
+        <item>ER: erDiagram syntax cho entities và relationships; dùng khi thiết kế schema DB; xem er-diagram.md.</item>
+      </conventions>
+    </context>
+
+    <task>
+      Xây dựng các skill (Cursor/Claude Agent Skills) để:
+      <step n="1">Phân tích yêu cầu hoặc tài liệu và suy ra cấu trúc phù hợp cho từng loại sơ đồ.</step>
+      <step n="2">Thiết kế nội dung sơ đồ (actors, classes, luồng, bước).</step>
+      <step n="3">Tạo/ghi diagram bằng cú pháp Mermaid vào file Markdown theo quy ước project.</step>
+    </task>
+
+    <requirements>
+      <req>Mỗi loại sơ đồ tương ứng một (hoặc nhóm) skill: Class Diagram, Object Diagram, Use Case Diagram, Activity Diagram, Sequence Diagram.</req>
+      <req>Skill phải mô tả: (1) khi nào dùng loại diagram đó, (2) cú pháp Mermaid tương ứng, (3) cấu trúc file .md (blockquote Mục đích/Format, code block, ghi chú).</req>
+      <req>Định dạng lưu trữ: chỉ Markdown; code diagram nằm trong ```mermaid ... ``` để vừa lưu code vừa hiển thị view.</req>
+      <req>Tham chiếu ví dụ có sẵn: Docs/life-1/03-research/sse-nextjs.md (Sequence), Docs/life-2/diagrams/class-diagram.md, Docs/life-2/diagrams/UseCase/use-case-diagram.md, Docs/life-2/diagrams/sequence-diagram.md, Docs/life-2/diagrams/flow-diagram.md (Activity/Flowchart), Docs/life-2/diagrams/er-diagram.md (ER).</req>
+    </requirements>
+
+    <constraints>
+      <do>Dùng Mermaid làm ngôn ngữ diagram chính; tuân thủ cấu trúc thư mục Docs/life-2/diagrams/ (và con như UseCase/).</do>
+      <dont>Không bắt buộc công cụ vẽ GUI (Draw.io) trừ khi có yêu cầu riêng; không thay đổi quy ước blockquote/Format của các file hiện có.</dont>
+    </constraints>
+
+    <expected-output>
+      <deliverable n="1">Danh sách (hoặc bản mô tả) các skill cần tạo: tên skill, phạm vi (Class / Object / Use Case / Activity / Sequence), trigger phrase, nội dung chính (khi nào dùng, cú pháp Mermaid, cấu trúc file .md).</deliverable>
+      <deliverable n="2">Ví dụ cú pháp Mermaid tối thiểu cho từng loại diagram (Class, Object, Use Case, Activity, Sequence) — có thể nằm trong prompt hoặc trong file .md mẫu.</deliverable>
+    </expected-output>
+
+    <examples>
+      <example type="sequence" file="Docs/life-1/03-research/sse-nextjs.md" lines="164-196">sequenceDiagram với participant, alt, Note (luồng SSE).</example>
+      <example type="sequence-simple" file="Docs/life-2/diagrams/sequence-diagram.md">sequenceDiagram Auth, Post Creation — cấu trúc đơn giản.</example>
+      <example type="class" file="Docs/life-2/diagrams/class-diagram.md">classDiagram với User, Post, quan hệ 1 --&gt; *.</example>
+      <example type="use-case" file="Docs/life-2/diagrams/UseCase/use-case-diagram.md">flowchart TB với subgraph Actors và MVP Use Cases.</example>
+      <example type="activity" file="Docs/life-2/diagrams/flow-diagram.md">flowchart TD với decision diamond, luồng News Feed Ranking, Post Creation.</example>
+      <example type="er" file="Docs/life-2/diagrams/er-diagram.md">erDiagram với User, Post, Comment, quan hệ ||--o{.</example>
+      <example type="object">Object Diagram: ít dùng; khi cần dùng flowchart hoặc classDiagram với instance. Chưa có file mẫu.</example>
+    </examples>
+  </improved-prompt>
+
+  <summary-of-changes>
+    <item reason="Làm rõ vai trò AI">Thêm **Role**: chuyên gia UML + Mermaid + Markdown.</item>
+    <item reason="Gắn với codebase">Thêm **Context**: project OpenSpec, thư viện Mermaid, đường dẫn Docs/life-2/diagrams và quy ước blockquote + fenced code.</item>
+    <item reason="Tách nhiệm vụ rõ ràng">**Task** chia thành 3 việc: phân tích, thiết kế, tạo/ghi diagram; và yêu cầu skill theo từng loại sơ đồ.</item>
+    <item reason="Giảm mơ hồ">**Requirements**: nêu rõ mỗi skill cần có (khi nào dùng, cú pháp Mermaid, cấu trúc file .md); định dạng chỉ Markdown + Mermaid.</item>
+    <item reason="Tránh scope creep">**Constraints**: DO/DON'T — chỉ Mermaid, chỉ Markdown, giữ quy ước hiện có.</item>
+    <item reason="Output có thể kiểm tra">**Expected Output**: hai deliverable — mô tả skill + ví dụ cú pháp từng loại diagram.</item>
+    <item reason="Bổ sung ví dụ">**Examples**: trích dẫn cụ thể file + đoạn (sse-nextjs.md, class-diagram.md, use-case-diagram.md) để AI bám theo style và cú pháp.</item>
+    <item reason="Đóng gaps 2026-02-02">**Activity**: map flowchart TD/LR, tham chiếu flow-diagram.md. **Object**: làm rõ ít dùng, có thể bỏ qua MVP. **ER**: thêm erDiagram, tham chiếu er-diagram.md. Cập nhật examples cho tất cả loại.</item>
+  </summary-of-changes>
+</format-prompt-output>

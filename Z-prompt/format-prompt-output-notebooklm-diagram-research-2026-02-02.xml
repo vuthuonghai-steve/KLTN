@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<prompt_improver_output>
+  <meta>
+    <prompt_type>research_and_resource_gathering</prompt_type>
+    <target_tool>NotebookLM (skill notebooklm)</target_tool>
+    <output_format>XML</output_format>
+  </meta>
+
+  <improved_prompt>
+    <role>
+      Bạn đóng vai trò trợ lý nghiên cứu phân tích thiết kế. Nhiệm vụ: sử dụng skill NotebookLM để lấy thông tin và tài nguyên hướng dẫn từ notebook đã chỉ định, phục vụ xây dựng tài liệu và skill cho 5 loại sơ đồ UML dùng trong phát triển website.
+    </role>
+
+    <context>
+      <environment>
+        <project>KLTN</project>
+        <storage_location note="Nơi lưu trữ tài liệu sơ đồ, không phải bản thân tài liệu phân tích thiết kế">
+          <path>Docs/life-2/diagrams/</path>
+          <artifact path="Docs/life-2/diagrams/class-diagram.md">Class Diagram (Mermaid)</artifact>
+          <artifact path="Docs/life-2/diagrams/UseCase/use-case-diagram.md">Use Case Diagram (Mermaid)</artifact>
+          <artifact path="Docs/life-2/diagrams/er-diagram.md">ER Diagram</artifact>
+          <artifact path="Docs/life-2/diagrams/sequence-diagram.md">Sequence Diagram</artifact>
+        </storage_location>
+        <convention>Diagrams lưu dạng Markdown, vẽ bằng Mermaid khi có thể.</convention>
+      </environment>
+      <notebooklm>
+        <url>https://notebooklm.google.com/notebook/46ddeb54-c391-43df-95f2-53c820428ada</url>
+        <usage>Tài nguyên đã được chuẩn bị sẵn trong notebook này. Cần tổng hợp và khai thác lần lượt (từng sơ đồ) thông qua skill NotebookLM: python scripts/run.py ask_question.py --question "..." --notebook-url "[URL]". Mỗi câu hỏi độc lập; dùng follow-up nếu câu trả lời chưa đủ.</usage>
+      </notebooklm>
+      <diagram_scope>
+        <diagram id="1" name="Class Diagram"/>
+        <diagram id="2" name="Object Diagram"/>
+        <diagram id="3" name="Use Case Diagram"/>
+        <diagram id="4" name="Activity Diagram"/>
+        <diagram id="5" name="Sequence Diagram"/>
+      </diagram_scope>
+    </context>
+
+    <task>
+      Triển khai nghiên cứu và lấy tài nguyên từ NotebookLM lần lượt cho từng sơ đồ (theo thứ tự 1→5). Với mỗi sơ đồ, thu thập đủ nội dung theo 5 nhóm sau, rồi tổng hợp lại.
+    </task>
+
+    <content_requirements per_diagram="5 nhóm bắt buộc">
+      <group id="1" name="Lý thuyết">Khái niệm, mục đích, khi nào dùng, ý nghĩa trong phân tích thiết kế.</group>
+      <group id="2" name="Cấu trúc">Cú pháp, ký hiệu chuẩn (UML/Mermaid), cấu trúc file hoặc mô hình.</group>
+      <group id="3" name="Cách thức xây dựng">Quy trình từng bước, best practices, gợi ý công cụ.</group>
+      <group id="4" name="Hoạt động">Cách đọc sơ đồ, luồng thông tin, tương tác giữa các thành phần.</group>
+      <group id="5" name="Thành phần cấu thành">Danh sách thành phần (classes, actors, lifelines, v.v.), vai trò và quan hệ.</group>
+    </content_requirements>
+
+    <deliverables>
+      <item>Bộ tài nguyên tổng hợp cho từng sơ đồ (1–5), có thể lưu dạng Markdown hoặc section trong file chung.</item>
+      <item>Checklist kiểm tra cho từng sơ đồ: đánh giá đã lấy đủ 5 nhóm nội dung chưa.</item>
+      <item>Checklist tổng: đánh giá đã lấy đủ thông tin cho cả 5 loại sơ đồ chưa.</item>
+    </deliverables>
+
+    <instructions>
+      <step order="1">Kiểm tra xác thực NotebookLM (auth_manager.py status) và thêm/kích hoạt notebook theo URL đã cho nếu cần.</step>
+      <step order="2">Với từng sơ đồ (Class → Object → Use Case → Activity → Sequence): đặt câu hỏi NotebookLM theo 5 nhóm nội dung (lý thuyết, cấu trúc, cách xây dựng, hoạt động, thành phần). Dùng follow-up nếu câu trả lời chưa đủ (theo skill notebooklm).</step>
+      <step order="3">Tổng hợp kết quả mỗi sơ đồ thành một section hoặc file riêng; ghi rõ nguồn (NotebookLM, notebook URL).</step>
+      <step order="4">Áp dụng checklist từng sơ đồ để đánh giá đủ/thiếu; bổ sung câu hỏi follow-up nếu thiếu.</step>
+      <step order="5">Chạy checklist tổng; nếu đủ thì kết thúc, nếu thiếu thì quay lại bước 2 cho sơ đồ tương ứng.</step>
+    </instructions>
+
+    <checklist_per_diagram name="Mẫu checklist cho mỗi sơ đồ">
+      <criterion id="theory">[ ] Lý thuyết: có khái niệm, mục đích, bối cảnh sử dụng.</criterion>
+      <criterion id="structure">[ ] Cấu trúc: có cú pháp/ký hiệu, format (UML/Mermaid).</criterion>
+      <criterion id="howto">[ ] Cách xây dựng: có quy trình hoặc best practices.</criterion>
+      <criterion id="behavior">[ ] Hoạt động: có cách đọc và luồng thông tin.</criterion>
+      <criterion id="components">[ ] Thành phần: có danh sách thành phần và quan hệ.</criterion>
+    </checklist_per_diagram>
+
+    <checklist_overall name="Checklist tổng sau khi hoàn thành 5 sơ đồ">
+      <criterion>[ ] Class Diagram: đã tổng hợp và đã chạy checklist từng sơ đồ.</criterion>
+      <criterion>[ ] Object Diagram: đã tổng hợp và đã chạy checklist từng sơ đồ.</criterion>
+      <criterion>[ ] Use Case Diagram: đã tổng hợp và đã chạy checklist từng sơ đồ.</criterion>
+      <criterion>[ ] Activity Diagram: đã tổng hợp và đã chạy checklist từng sơ đồ.</criterion>
+      <criterion>[ ] Sequence Diagram: đã tổng hợp và đã chạy checklist từng sơ đồ.</criterion>
+      <criterion>[ ] Tất cả checklist từng sơ đồ đều pass (đủ 5 nhóm nội dung).</criterion>
+    </checklist_overall>
+
+    <constraints>
+      <do>Dùng duy nhất skill NotebookLM (ask_question.py với --notebook-url) để lấy nội dung từ notebook đã chỉ định.</do>
+      <do>Triển khai lần lượt từng sơ đồ; không bỏ qua thứ tự khi tổng hợp.</do>
+      <do>Ghi chú vị trí file tạo/sửa khi lưu tài nguyên (theo quy ước user).</do>
+      <dont>Không bịa nội dung không có trong notebook; nếu notebook không có đủ thì ghi rõ “chưa có trong nguồn”.</dont>
+    </constraints>
+
+    <expected_output>
+      <format>Markdown hoặc XML: mỗi sơ đồ một section/file tổng hợp (5 nhóm nội dung); kèm 5 checklist từng sơ đồ đã điền và 1 checklist tổng đã điền.</format>
+      <location_suggestion>Docs/life-2/diagrams/ hoặc Z-prompt/; tên file có thể: diagram-research-Class.md, diagram-research-UseCase.md, ... và diagram-research-summary.md (hoặc .xml).</location_suggestion>
+    </expected_output>
+  </improved_prompt>
+
+</prompt_improver_output>

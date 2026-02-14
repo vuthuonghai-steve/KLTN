@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Output từ /format-prompt: Map chức năng từng bậc + Map ưu tiên triển khai.
+  Tạo: 2026-02-02
+  Tài nguyên: Docs/life-1/01-vision/FR/requirements-srs.md, arhitacture-V2.md, bản đồ chức năng Content-centric SNS
+-->
+<format-prompt-output>
+  <summary lang="vi">
+    <analysis>
+      <goal>Xây dựng map chức năng từng bậc dành cho hệ thống; xây map chức năng dành cho từng bậc ưu tiên triển khai</goal>
+      <context>Content-centric SNS (Social Publishing + Social Bookmarking), 6 module, Payload CMS + Next.js + MongoDB, tài liệu FR và kiến trúc đã có</context>
+      <audience>AI Agent (Claude/Cursor) khi cần tạo hoặc cập nhật map chức năng / map ưu tiên</audience>
+      <complexity>Nhiều bước: phân cấp 4 bậc (0→1→2→3) rồi ánh xạ ưu tiên theo sprint</complexity>
+      <output-type>Hai artifact: (1) Map chức năng theo bậc (hệ thống → module → nhóm → chi tiết), (2) Map ưu tiên triển khai theo sprint/bậc</output-type>
+      <structure-check>
+        <has>Context (dự án, 6 module, bảng technical mapping)</has>
+        <has>Task (xây map chức năng từng bậc, map ưu tiên)</has>
+        <missing>Role rõ ràng cho AI</missing>
+        <missing>Định nghĩa chuẩn của "bậc" (Bậc 0/1/2/3 là gì)</missing>
+        <missing>Instructions từng bước (làm bậc nào trước, format từng bảng)</missing>
+        <missing>Output format (cấu trúc bảng, id, cột nào bắt buộc)</missing>
+        <missing>Constraints (tham chiếu FR, collections Payload)</missing>
+      </structure-check>
+      <strengths>Context rất đầy đủ; bảng Technical Mapping rõ; file tài nguyên (requirements-srs.md) được chỉ định</strengths>
+      <gaps>Không nêu rõ cấu trúc cây bậc (0=system, 1=module, 2=nhóm chức năng, 3=chức năng chi tiết); không nêu format deliverable (markdown table vs XML)</gaps>
+    </analysis>
+    <codebase-context>
+      <project>OpenSpec-based, Content-centric SNS. Tech: Next.js, Payload CMS 3.x, MongoDB Atlas, Vercel Blob, SSE.</project>
+      <relevant-files>Docs/life-1/01-vision/FR/requirements-srs.md (FR-1..FR-10, NFR), Docs/life-1/arhitacture-V2.md (sprint, epics), Docs/life-2/database/schema-design.md (collections).</relevant-files>
+      <conventions>FR đánh số FR-1..FR-10; Collections: Users, Posts, Comments, Follows, Bookmarks, Notifications, Blocks; Sprint 1 = Auth &amp; Profile, Sprint 2 = Content + Bookmarking + Interactions cơ bản.</conventions>
+    </codebase-context>
+    <changes-made>
+      <item>Bổ sung Role: AI là người xây map chức năng và map ưu tiên từ tài liệu FR + kiến trúc</item>
+      <item>Định nghĩa rõ 4 bậc: Bậc 0 = Hệ thống, 1 = Module, 2 = Nhóm chức năng, 3 = Chức năng chi tiết (map FR + Collection)</item>
+      <item>Instructions step-by-step: đọc FR và context → xây Bậc 0 → Bậc 1 (6 module) → Bậc 2 (nhóm trong từng module) → Bậc 3 (chi tiết + FR + Collection) → map ưu tiên theo sprint</item>
+      <item>Output format: bảng markdown hoặc XML; mỗi bậc có Id, Tên, Mô tả; Bậc 3 có cột FR và Collection; map ưu tiên có Sprint, Module, Nhóm, Deliverable</item>
+      <item>Constraints: phải tham chiếu FR-1..FR-10 và NFR khi có; ánh xạ đúng Collections Payload; Sprint 1 bắt đầu bằng Auth &amp; Profile (Users)</item>
+    </changes-made>
+  </summary>
+
+  <!-- Map chức năng từng bậc (thu gọn trong XML) -->
+  <feature-map-by-level>
+    <level id="0" name="Hệ thống">
+      <item id="S0" name="Content-centric SNS" description="Mạng xã hội chia sẻ kiến thức; Social Publishing + Social Bookmarking"/>
+    </level>
+    <level id="1" name="Module">
+      <item id="M1" name="Tài khoản &amp; Hồ sơ" fr="FR-1,FR-2"/>
+      <item id="M2" name="Nội dung (Content Engine)" fr="FR-3"/>
+      <item id="M3" name="Khám phá &amp; Phân phối" fr="FR-4,FR-7"/>
+      <item id="M4" name="Tương tác &amp; Cộng đồng" fr="FR-5,FR-10"/>
+      <item id="M5" name="Lưu trữ Kiến thức (Bookmarking)" fr="FR-6"/>
+      <item id="M6" name="Hệ thống &amp; Thông báo" fr="FR-8,FR-9"/>
+    </level>
+    <level id="2" name="Nhóm chức năng">
+      <item parent="M1" id="M1.1" name="Authentication"/>
+      <item parent="M1" id="M1.2" name="User Profile"/>
+      <item parent="M2" id="M2.1" name="Post Creation"/>
+      <item parent="M2" id="M2.2" name="Post Management"/>
+      <item parent="M3" id="M3.1" name="News Feed"/>
+      <item parent="M3" id="M3.2" name="Search"/>
+      <item parent="M4" id="M4.1" name="Tương tác cơ bản"/>
+      <item parent="M4" id="M4.2" name="Connections"/>
+      <item parent="M5" id="M5.1" name="Bookmark"/>
+      <item parent="M5" id="M5.2" name="Collections"/>
+      <item parent="M6" id="M6.1" name="Notifications"/>
+      <item parent="M6" id="M6.2" name="Moderation"/>
+    </level>
+    <level id="3" name="Chức năng chi tiết">
+      <note>Chi tiết đầy đủ: xem Docs/life-1/01-vision/FR/feature-map-and-priority.md (Bậc 3 — Chức năng chi tiết)</note>
+    </level>
+  </feature-map-by-level>
+
+  <!-- Map ưu tiên triển khai theo bậc/sprint -->
+  <priority-map-by-sprint>
+    <sprint id="1" name="Nền tảng">M1 (Auth &amp; Profile); Collection: Users</sprint>
+    <sprint id="2" name="Nội dung &amp; tương tác">M2, M4 (một phần), M5; Collections: Posts, Comments, Bookmarks</sprint>
+    <sprint id="3" name="Khám phá &amp; kết nối">M3, M4 (Connections); Follows, Blocks, Atlas Search</sprint>
+    <sprint id="4" name="Realtime &amp; kiểm duyệt">M6; Notifications (SSE), Moderation</sprint>
+  </priority-map-by-sprint>
+
+  <!-- Prompt đã nâng cấp (sẵn sàng dùng) -->
+  <improved-prompt>
+    <![CDATA[
+## Role
+Bạn là người xây dựng bản đồ chức năng và map ưu tiên triển khai cho hệ thống Content-centric SNS. Nhiệm vụ: từ tài liệu FR và kiến trúc, tạo (hoặc cập nhật) map chức năng theo từng bậc và map ưu tiên triển khai theo từng bậc/sprint.
+
+## Context
+### Project & tech stack
+- Dự án: Mạng xã hội chia sẻ kiến thức (Content-centric SNS); trọng tâm Social Publishing + Social Bookmarking.
+- Tech: Next.js, Payload CMS 3.x, MongoDB Atlas, Vercel Blob, SSE. Tài liệu: Docs/life-1/01-vision/FR/requirements-srs.md, Docs/life-1/arhitacture-V2.md, Docs/life-2/database/schema-design.md.
+
+### Định nghĩa bậc (level)
+- **Bậc 0:** Hệ thống (1 node: Content-centric SNS).
+- **Bậc 1:** Module — 6 nhóm chức năng (Auth & Profile, Content, Discovery & Feed, Engagement, Bookmarking, System & Notifications).
+- **Bậc 2:** Nhóm chức năng — bên trong từng module (ví dụ: Authentication, User Profile, Post Creation, Post Management, News Feed, Search, …).
+- **Bậc 3:** Chức năng chi tiết — từng tính năng cụ thể, có ánh xạ tới FR (FR-1..FR-10) và Collection Payload (Users, Posts, Comments, Follows, Bookmarks, Notifications, Blocks).
+
+### Quy ước
+- Mỗi mục trong map có **Id** (ví dụ M1, M1.1, M1.1.1) và **Tên** (mô tả ngắn). Bậc 3 có thêm cột **FR** và **Collection**.
+- Map ưu tiên: theo Sprint (1 → 4); Sprint 1 = Auth & Profile (Users), Sprint 2 = Content + Interactions cơ bản + Bookmarking, Sprint 3 = Discovery + Connections, Sprint 4 = Notifications + Moderation.
+
+## Task
+1. Xây dựng **map chức năng từng bậc** cho hệ thống: Bậc 0 → Bậc 1 → Bậc 2 → Bậc 3, với Id, Tên, Mô tả; Bậc 3 phải map tới FR và Collection.
+2. Xây dựng **map ưu tiên triển khai** theo từng bậc: với mỗi Sprint (1–4), liệt kê Module (Bậc 1), nhóm chức năng (Bậc 2) và Collections tương ứng, kèm deliverable ngắn gọn.
+
+## Instructions
+1. Đọc Docs/life-1/01-vision/FR/requirements-srs.md (FR-1..FR-10, NFR) và context bản đồ chức năng (6 module, bảng Technical Mapping).
+2. Xây Bậc 0: 1 mục (Content-centric SNS).
+3. Xây Bậc 1: 6 module (M1..M6), mỗi mục gắn FR tham chiếu.
+4. Xây Bậc 2: với mỗi module, tách thành 2 nhóm chức năng (ví dụ M1.1 Authentication, M1.2 User Profile).
+5. Xây Bậc 3: với mỗi nhóm Bậc 2, liệt kê chức năng chi tiết (ví dụ Đăng nhập Email/Password, OAuth Google, …); mỗi chức năng gắn FR và Collection (nếu có).
+6. Xây map ưu tiên: Sprint 1 (M1, Users) → Sprint 2 (M2, M4 phần, M5; Posts, Comments, Bookmarks) → Sprint 3 (M3, M4.2; Follows, Blocks, Search) → Sprint 4 (M6; Notifications, Moderation). Ghi rõ deliverable từng sprint.
+
+## Constraints
+- DO: Tham chiếu đúng FR-1..FR-10 khi gắn chức năng; ánh xạ đúng Collections (Users, Posts, Comments, Follows, Bookmarks, Notifications, Blocks).
+- DO: Giữ thứ tự phụ thuộc: Auth & Profile trước → Content → Discovery → Engagement & Notifications.
+- DON'T: Không thêm module hoặc FR ngoài tài liệu đã có; không đảo sprint so với arhitacture-V2.
+
+## Expected Output
+- **Map chức năng từng bậc:** Bảng (markdown hoặc XML) với 4 cấp: Bậc 0 (1 dòng), Bậc 1 (6 dòng), Bậc 2 (12 dòng), Bậc 3 (nhiều dòng, mỗi dòng có Id, Tên, FR, Collection).
+- **Map ưu tiên:** Bảng hoặc danh sách theo Sprint 1–4, mỗi sprint có Module, Nhóm, Collections, Deliverable ngắn.
+- Ghi chú vị trí file tạo/sửa (ví dụ: Docs/life-1/01-vision/FR/feature-map-and-priority.md).
+
+## Success Criteria
+- [ ] Đủ 4 bậc (0, 1, 2, 3) với Id nhất quán (S0, M1..M6, Mx.y, Mx.y.z).
+- [ ] Mọi chức năng Bậc 3 đều map tới ít nhất một FR và (nếu có) Collection.
+- [ ] Map ưu tiên khớp với Sprint 1–4 và collections (Users → Posts/Comments/Bookmarks → Follows/Blocks/Search → Notifications/Moderation).
+- [ ] File output được ghi rõ đường dẫn.
+    ]]>
+  </improved-prompt>
+</format-prompt-output>
